@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "elb-log-analyzer"
+version = "0.1.0"
+description = "AWB ELB log analyzer"
+authors = ["Dhrumil Mistry <56185972+dmdhrumilmistry@users.noreply.github.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "elb_log_analyzer"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
