@@ -4,9 +4,8 @@ from .utils import get_abusive_ip_data, get_logs
 
 
 class LogAnalyzer:
-    def __init__(self, log_file_path: str, ipabuse_api_key: str, request_threshold: int = 150) -> None:
+    def __init__(self, log_file_path: str, ipabuse_api_key: str=None, request_threshold: int = 150) -> None:
         assert isinstance(log_file_path, str)
-        # assert isinstance(ipabuse_api_key, str)
         assert isinstance(request_threshold, int)
 
         self._ipabuse_api_key = ipabuse_api_key
@@ -19,6 +18,10 @@ class LogAnalyzer:
 
         # unique ips
         self.unique_ips = None
+
+        # analyzed logs
+        self.analyzed_logs = self.analyze_logs()
+
 
     def _log_lines_to_dict(self):
         '''
@@ -105,12 +108,13 @@ class LogAnalyzer:
         # create list of requests count by client ip
         request_counts = {client_ip: 0 for client_ip in self.unique_ips}
 
+        # count request by each ip
         for ip in self.unique_ips:
             for log in self.logs:
-
-                if ip == log.get('client_ip'):
+                if ip == log['client_ip']:
                     request_counts[ip] += 1
-
+        
+        # convert it to list
         return request_counts
 
     def analyze_logs(self):

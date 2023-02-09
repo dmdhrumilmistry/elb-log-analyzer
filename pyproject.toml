@@ -9,6 +9,8 @@ packages = [{include = "elb_log_analyzer"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+streamlit = "^1.17.0"
+pandas = "^1.5.3"
 
 
 [build-system]
