@@ -35,7 +35,7 @@ Tool for analyzing ELB logs for automating steps to retreive details of ip's use
 - Get IP details from IPAbuseDB
 
     ```bash
-    python3 -m elb_log_analyzer -i [LOG_FILE_PATH] -t 3 -k [IP_ABUSE_DB_API_KEY] -o analyzed-data.json
+    python3 -m elb_log_analyzer -i [LOG_FILE_PATH] -t [REQUESTS_THRESHOLD_VALUE] -k [IP_ABUSE_DB_API_KEY] -o [OUTPUT_FILE_PATH]
     ```
 
 ## Publish package to pypi
