@@ -12,7 +12,7 @@ Tool for analyzing ELB logs for automating steps to retreive details of ip's use
 
 ## Usage
 
-- Print help Menu
+- Print Help Menu
 
     ```bash
     python3 -m elb_log_analyzer -h
@@ -29,6 +29,8 @@ Tool for analyzing ELB logs for automating steps to retreive details of ip's use
     ```bash
     python3 -m elb_log_analyzer -i [INPUT_LOG_FILE_PATH] -o [OUTPUT_FILE_PATH]
     ```
+
+    > **Note**: **INPUT_LOG_FILE_PATH** can be log file or a directory containing all log files ending with `.log` extension
 
 ## Publish package to pypi
 
