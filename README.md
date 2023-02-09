@@ -38,6 +38,28 @@ Tool for analyzing ELB logs for automating steps to retreive details of ip's use
     python3 -m elb_log_analyzer -i [LOG_FILE_PATH] -t [REQUESTS_THRESHOLD_VALUE] -k [IP_ABUSE_DB_API_KEY] -o [OUTPUT_FILE_PATH]
     ```
 
+## Dashboard
+
+Dashboard to visualize data.
+
+### Installation
+
+- Install requirements
+
+    ```bash
+    python3 -m pip install dashboard/requirements.txt
+    ```
+
+### Usage
+
+- Start App
+
+    ```bash
+    streamlit run dashboard/app.py
+    ```
+
+- Enter Log File/Directory Path
+
 ## Publish package to pypi
 
 - Using poetry

@@ -72,6 +72,6 @@ def get_logs(path:str):
 
     # if file/dir is not present then raise error
     else:
-        raise FileNotFoundError(f'{file_path} log file/files not found.')
+        raise FileNotFoundError(f'{path} log file/files not found.')
     
     return log_lines
