@@ -6,7 +6,6 @@ import streamlit as st
 st.set_page_config(layout='wide', page_title='ELB Log Analyzer Dashboard')
 
 st.write('# ELB-Log-Analyzer Dashboard')
-
 path = st.text_input('Enter Log Directory/File Path')
 if len(path) == 0:
     st.write('Required!')
@@ -34,20 +33,28 @@ st.bar_chart(request_df, x='client_ip', y='requests_count')
 analyzed_data = log_analyzer.analyzed_logs
 
 # create table for client ip, total_requests, ports, user_agents
-st.markdown('### Client Request Summary')
+st.markdown('''
+### Client Request Summary
+Search for below keywords to find bots:
+- bot
+- headless
+- requests
+- axios
+- node-fetch
+''')
 client_request_details = []
 for client_ip in analyzed_data.keys():
     if client_ip == 'total':
         continue
     
     tot_req_count = analyzed_data[client_ip]['total']
-    ports = analyzed_data[client_ip]['ports']
-    user_agents = analyzed_data[client_ip]['user_agents']
+    ports = ', '.join([str(port) for port in analyzed_data[client_ip]['ports']])
+    user_agents = '\n'.join(analyzed_data[client_ip]['user_agents'])
 
     client_request_details.append([client_ip, tot_req_count, ports, user_agents])
 
-client_req_df = DataFrame(client_request_details, columns=['client_ip', 'total request_count', 'ports', 'user agents'])
-st.table(client_req_df)
+client_req_df = DataFrame(client_request_details, columns=['client_ip', 'total_request_count', 'ports', 'user agents'])
+st.table(client_req_df.sort_values(by=['total_request_count'], ascending=False))
 
 # TODO: create table for client ip and abuse data (only for ips greater than threshold)
 
