@@ -197,6 +197,4 @@ class LogAnalyzer:
                     ipabuse_data = get_abusive_ip_data(client_ip, self._ipabuse_api_key)
                     data[client_ip]['ip_abuse_data'] = ipabuse_data
 
-
-
         return data
