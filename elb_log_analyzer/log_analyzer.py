@@ -119,12 +119,7 @@ class LogAnalyzer:
                 'ports':[] (list(int)),
                 'user_agents': [] (list(str)),
                 'requests':{
-                    'GET': [{'url' : count (int), 'total':count(int)],
-                    'POST': [{'url' : count (int), 'total':count(int)],
-                    'OPTIONS': [{'url' : count (int), 'total':count(int)],
-                    'PUT': [{'url' : count (int), 'total':count(int)],
-                    'PATCH': [{'url' : count (int), 'total':count(int)],
-                    'DELETE': [{'url' : count (int), 'total':count(int)]
+                    'HTTP_METHOD': [{'url' : {'count' :int, 'status_codes':[]} , 'total':count(int)],
                 }
             }
         }
@@ -145,12 +140,6 @@ class LogAnalyzer:
                     'ports': [],
                     'user_agents': [],
                     'requests': {
-                        # 'GET': {'total':0, 'url':},
-                        # 'POST': {},
-                        # 'OPTIONS': {},
-                        # 'PUT': {},
-                        # 'PATCH': {},
-                        # 'DELETE': {}
                     }
                 }
 
@@ -175,9 +164,13 @@ class LogAnalyzer:
             
             # if URL is not present in requests then create one
             if log['request']['url'] not in data[client]['requests'].keys():
-                data[client]['requests'][log['request']['method']].update({log['request']['url']:0})
-
-            data[client]['requests'][log['request']['method']][log['request']['url']] += 1
+                data[client]['requests'][log['request']['method']].update({log['request']['url']:{'count':0, 'elb_status_codes':[], 'backend_status_codes':[], 'timestamps':[]}})
+            
+            # update url hit count, status code and time stamps
+            data[client]['requests'][log['request']['method']][log['request']['url']]['count'] += 1
+            data[client]['requests'][log['request']['method']][log['request']['url']]['elb_status_codes'].append(log['elb_status_code'])
+            data[client]['requests'][log['request']['method']][log['request']['url']]['backend_status_codes'].append(log['backend_status_code'])
+            data[client]['requests'][log['request']['method']][log['request']['url']]['timestamps'].append(log['timestamp'])
 
 
 

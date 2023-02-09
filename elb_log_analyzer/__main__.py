@@ -15,6 +15,7 @@ args = parser.parse_args()
 # analyze logs 
 log_analyzer = LogAnalyzer(log_file_path=args.log_file_path, ipabuse_api_key=args.api_key, request_threshold=args.request_threshold)
 analyzed_data = log_analyzer.analyze_logs()
+# analyzed_data = log_analyzer.logs
 
 # write/print data
 out_file_path = args.output_file_path
