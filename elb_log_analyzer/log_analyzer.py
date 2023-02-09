@@ -29,6 +29,11 @@ class LogAnalyzer:
 
         '''
         for log_line in self._log_lines:
+            # if log line is empty then continue
+            if not log_line:
+                continue
+
+            # convert log lines into data structure
             data_between_quotes = findall('"([^"]*)"', log_line)
             request = data_between_quotes[0]
             user_agent = data_between_quotes[1]
@@ -119,14 +124,14 @@ class LogAnalyzer:
                 'ports':[] (list(int)),
                 'user_agents': [] (list(str)),
                 'requests':{
-                    'HTTP_METHOD': [{'url' : {'count' :int, 'status_codes':[]} , 'total':count(int)],
+                    'HTTP_METHOD': [{'url' : {'count' :int, 'elb_status_codes':[], 'backend_status_codes':[]} , 'total':count(int)],
                 }
             }
         }
 
         returns: dict
         '''
-        data = {'total':0}
+        data = {'total': 0}
         for log in self.logs:
             # increment total request count
             data['total'] += 1
@@ -154,24 +159,27 @@ class LogAnalyzer:
             if log['user_agent'] not in data[client]['user_agents']:
                 data[client]['user_agents'].append(log['user_agent'])
 
-            ## Count urls hits
+            # Count urls hits
             # if HTTP method is not present then create in dict
             if log['request']['method'] not in data[client]['requests'].keys():
-                data[client]['requests'][log['request']['method']] = {'total':0}
-            # increment total count 
+                data[client]['requests'][log['request']
+                                         ['method']] = {'total': 0}
+            # increment total count
             data[client]['requests'][log['request']['method']]['total'] += 1
 
-            
             # if URL is not present in requests then create one
             if log['request']['url'] not in data[client]['requests'].keys():
-                data[client]['requests'][log['request']['method']].update({log['request']['url']:{'count':0, 'elb_status_codes':[], 'backend_status_codes':[], 'timestamps':[]}})
-            
+                data[client]['requests'][log['request']['method']].update({log['request']['url']: {
+                                                                          'count': 0, 'elb_status_codes': [], 'backend_status_codes': [], 'timestamps': []}})
+
             # update url hit count, status code and time stamps
-            data[client]['requests'][log['request']['method']][log['request']['url']]['count'] += 1
-            data[client]['requests'][log['request']['method']][log['request']['url']]['elb_status_codes'].append(log['elb_status_code'])
-            data[client]['requests'][log['request']['method']][log['request']['url']]['backend_status_codes'].append(log['backend_status_code'])
-            data[client]['requests'][log['request']['method']][log['request']['url']]['timestamps'].append(log['timestamp'])
-
-
+            data[client]['requests'][log['request']['method']
+                                     ][log['request']['url']]['count'] += 1
+            data[client]['requests'][log['request']['method']][log['request']
+                                                               ['url']]['elb_status_codes'].append(log['elb_status_code'])
+            data[client]['requests'][log['request']['method']][log['request']
+                                                               ['url']]['backend_status_codes'].append(log['backend_status_code'])
+            data[client]['requests'][log['request']['method']
+                                     ][log['request']['url']]['timestamps'].append(log['timestamp'])
 
         return data
