@@ -129,7 +129,7 @@ class LogAnalyzer:
                 'user_agents': [] (list(str)),
                 'ip_abuse_data': None,
                 'requests':{
-                    'HTTP_METHOD': [{'url' : {'count' :int, 'elb_status_codes':[], 'backend_status_codes':[]} , 'total':count(int)],
+                    'HTTP_METHOD': {'url' : {'count' :int, 'elb_status_codes':[], 'backend_status_codes':[]} , 'total':count(int)},
                 }
             }
         }

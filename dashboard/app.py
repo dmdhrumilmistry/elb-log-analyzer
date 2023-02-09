@@ -18,13 +18,15 @@ log_analyzer = LogAnalyzer(log_file_path=path)
 df = json_normalize(log_analyzer.logs)
 
 # create bar chart for each ip
-st.markdown('### Client Request Time (Can be used for Detecting DDoS/Bruteforce Attacks')
+st.markdown(
+    '### Client Request Time (Can be used for Detecting DDoS/Bruteforce Attacks')
 st.bar_chart(df, x='client_ip', y='timestamp', height=480)
 
 # for total request count
 st.markdown('### Client URL Hit Count')
 requests_count = log_analyzer.count_request_by_client_ip()
-requests_count = [ [client_ip,requests_count[client_ip]] for client_ip in requests_count.keys()]
+requests_count = [[client_ip, requests_count[client_ip]]
+                  for client_ip in requests_count.keys()]
 
 request_df = DataFrame(requests_count, columns=['client_ip', 'requests_count'])
 st.bar_chart(request_df, x='client_ip', y='requests_count')
@@ -43,23 +45,44 @@ Search for below keywords to find bots:
 - node-fetch
 ''')
 client_request_details = []
+http_req_details = []
 for client_ip in analyzed_data.keys():
     if client_ip == 'total':
         continue
-    
+
+    # for client_req_df
     tot_req_count = analyzed_data[client_ip]['total']
-    ports = ', '.join([str(port) for port in analyzed_data[client_ip]['ports']])
+    ports = ', '.join([str(port)
+                      for port in analyzed_data[client_ip]['ports']])
     user_agents = '\n'.join(analyzed_data[client_ip]['user_agents'])
 
-    client_request_details.append([client_ip, tot_req_count, ports, user_agents])
+    client_request_details.append(
+        [client_ip, tot_req_count, ports, user_agents])
 
-client_req_df = DataFrame(client_request_details, columns=['client_ip', 'total_request_count', 'ports', 'user agents'])
-st.table(client_req_df.sort_values(by=['total_request_count'], ascending=False))
+    # for http_req_df
+    http_requests = analyzed_data[client_ip]['requests']
+    get = '\n'.join(http_requests.get('GET', {}).keys())
+    post = '\n'.join(http_requests.get('POST', {}).keys())
+    put = '\n'.join(http_requests.get('PUT', {}).keys())
+    patch = '\n'.join(http_requests.get('PATCH', {}).keys())
+    delete = '\n'.join(http_requests.get('DELETE', {}).keys())
+    options = '\n'.join(http_requests.get('OPTIONS', {}).keys())
+
+    http_req_details.append([client_ip, get, post, put, patch, delete, options])
+
+    
+# plot user data
+client_req_df = DataFrame(client_request_details, columns=[
+                          'client_ip', 'total_request_count', 'ports', 'user agents'])
+st.table(client_req_df.sort_values(
+    by=['total_request_count'], ascending=False))
+
+# plot user requested urls
+st.markdown('''
+### Client URLs list
+''')
+
+http_req_df = DataFrame(http_req_details, columns=['client_ip', 'GET','POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'])
+st.table(http_req_df)
 
 # TODO: create table for client ip and abuse data (only for ips greater than threshold)
-
-
-# TODO: create table for client ip and urls data.
-
-# plot data into a table
-# st.table(df)
