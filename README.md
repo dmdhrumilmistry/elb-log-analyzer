@@ -42,6 +42,16 @@ Tool for analyzing ELB logs for automating steps to retreive details of ip's use
 
 Dashboard to visualize data.
 
+### Installation
+
+- Install requirements
+
+    ```bash
+    python3 -m pip install dashboard/requirements.txt
+    ```
+
+### Usage
+
 - Start App
 
     ```bash
