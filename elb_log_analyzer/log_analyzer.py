@@ -4,7 +4,7 @@ from .utils import get_abusive_ip_data, get_logs
 
 
 class LogAnalyzer:
-    def __init__(self, log_file_path: str, ipabuse_api_key: str, request_threshold: int = 40) -> None:
+    def __init__(self, log_file_path: str, ipabuse_api_key: str, request_threshold: int = 150) -> None:
         assert isinstance(log_file_path, str)
         # assert isinstance(ipabuse_api_key, str)
         assert isinstance(request_threshold, int)
@@ -123,6 +123,7 @@ class LogAnalyzer:
                 'total': count(int),
                 'ports':[] (list(int)),
                 'user_agents': [] (list(str)),
+                'ip_abuse_data': None,
                 'requests':{
                     'HTTP_METHOD': [{'url' : {'count' :int, 'elb_status_codes':[], 'backend_status_codes':[]} , 'total':count(int)],
                 }
@@ -181,5 +182,17 @@ class LogAnalyzer:
                                                                ['url']]['backend_status_codes'].append(log['backend_status_code'])
             data[client]['requests'][log['request']['method']
                                      ][log['request']['url']]['timestamps'].append(log['timestamp'])
+        
+        # get abuse details if threshold increases
+        if self._ipabuse_api_key:
+            for client_ip in data.keys():
+                if client_ip == 'total':
+                    continue
+
+                if data[client_ip]['total'] > self._request_threshold:
+                    ipabuse_data = get_abusive_ip_data(client_ip, self._ipabuse_api_key)
+                    data[client_ip]['ip_abuse_data'] = ipabuse_data
+
+
 
         return data

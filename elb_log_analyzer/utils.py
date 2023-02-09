@@ -29,7 +29,7 @@ def get_abusive_ip_data(ip: str, api_key: str):
     )
     
     try:
-        data = res.json()
+        data = res.json().get("data", None)
     except JSONDecodeError:
         data = {'msg': f'Error while fetching ip details of {ip}'}
     return data
@@ -67,8 +67,8 @@ def get_logs(path:str):
             log_lines += read_file_lines(file_path)
 
     # if path is a file then extract log lines
-    elif isfile(file_path):
-        log_lines = read_file_lines(file_path)
+    elif isfile(path):
+        log_lines = read_file_lines(path)
 
     # if file/dir is not present then raise error
     else:
