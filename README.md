@@ -1,6 +1,6 @@
 # ELB Log Analyzer
 
-Tool for analyzing ELB logs.
+Tool for analyzing ELB logs for automating steps to retreive details of ip's user agent, total request count, to which urls requests were made along with their total count, and http methods in json format.
 
 ## Installation
 
