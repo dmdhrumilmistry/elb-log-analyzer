@@ -32,6 +32,12 @@ Tool for analyzing ELB logs for automating steps to retreive details of ip's use
 
     > **Note**: **INPUT_LOG_FILE_PATH** can be log file or a directory containing all log files ending with `.log` extension
 
+- Get IP details from IPAbuseDB
+
+    ```bash
+    python3 -m elb_log_analyzer -i [LOG_FILE_PATH] -t 3 -k [IP_ABUSE_DB_API_KEY] -o analyzed-data.json
+    ```
+
 ## Publish package to pypi
 
 - Using poetry
