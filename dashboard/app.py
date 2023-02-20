@@ -1,4 +1,4 @@
-from pandas import json_normalize, DataFrame
+from pandas import DataFrame
 from json import loads
 from utils import get_client_requests_count, get_data
 
@@ -8,21 +8,19 @@ st.set_page_config(layout='wide', page_title='ELB Log Analyzer Dashboard')
 
 st.write('# ELB-Log-Analyzer Dashboard')
 path = st.text_input('Enter Log File Path')
-if len(path) == 0 or not path:
+if path == '' or not path:
     st.write('Required!')
+    st.stop()
 
 
 # load analyzed logs into analyzer
 with open(path, 'r') as f:
     analyzed_data = loads(f.read())
 
-# load analyzed data into data frame
-# df = json_normalize(log_analyzer.logs)
-
 # create bar chart for each ip
 # st.markdown(
     # '### Client Request Time (Can be used for Detecting DDoS/Bruteforce Attacks')
-# st.bar_chart(df, x='client_ip', y='timestamp', height=480)
+# st.bar_chart(timestamp_df, x='client_ip', y='timestamp', height=480)
 
 # for total request count
 st.markdown('### Client URL Hit Count')
