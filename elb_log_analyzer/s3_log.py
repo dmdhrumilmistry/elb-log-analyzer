@@ -1,3 +1,4 @@
+from argparse import ArgumentParser
 from os import makedirs, remove
 from os.path import isdir, isfile, join as path_join, dirname
 from datetime import datetime, timedelta, timezone
@@ -6,12 +7,18 @@ from datetime import datetime, timedelta, timezone
 import asyncio
 import boto3
 import gzip
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO,
+                    format='[%(asctime)s] [%(levelname)s] - %(message)s')
 
 
 class S3LogFetcher:
     '''
     class to download elb logs from S3 bucket
     '''
+
     def __init__(self, bucket_name: str, prefix: str) -> None:
         self._bucket_name = bucket_name
         self._prefix = prefix
@@ -37,9 +44,11 @@ class S3LogFetcher:
 
             # delete .gz file after extraction
             remove(local_file_path)
-            print(f'{s3_file_key} file downloaded at {local_file_path}')
+            logger.info(f'{s3_file_key} file downloaded and extracted at {extracted_file_path}')
 
             return True
+        
+        logger.error(f'Failed to download {s3_file_key}')
 
         return False
 
@@ -71,22 +80,42 @@ class S3LogFetcher:
                     continue
 
                 # download file
-                tasks.append(self.download_log_and_extract(key, local_file_path))
+                tasks.append(self.download_log_and_extract(
+                    key, local_file_path))
 
         return await asyncio.gather(*tasks)
 
+
 if __name__ == '__main__':
+    parser = ArgumentParser(prog='s3_log')
+
+    parser.add_argument('-b', '--bucket', dest='bucket_name',
+                        help='s3 bucket name', required=True, type=str)
+    parser.add_argument('-p', '--prefix', dest='prefix',
+                        help='s3 bucket directory prefix', required=True, type=str)
+    parser.add_argument('-H', '--hour', dest='hours',
+                        help='download logs for specified previous hours from current time', required=False, type=int, default=0)
+    parser.add_argument('-m', '--minutes', dest='mins',
+                        help='download logs for specified previous mins from current time', required=False, type=int, default=0)
+    parser.add_argument('-s', '--seconds', dest='secs',
+                        help='download logs for specified previous seconds from current time', required=False, type=int, default=0)
+    parser.add_argument('-o', '--output', dest='store_location',
+                        help='path of directory to store downloaded logs', type=str, default='./logs')
+
+    args = parser.parse_args()
+
     end_time = datetime.now(timezone.utc)
-    start_time = end_time - timedelta(hours=9, minutes=0, seconds=0)
+    start_time = end_time - \
+        timedelta(hours=args.hours, minutes=args.mins, seconds=args.secs)
 
     log_fetcher = S3LogFetcher(
-        bucket_name='bucket-name',
-        prefix='AWSLogs/number/elasticloadbalancing/region/',
+        bucket_name=args.bucket_name,
+        prefix=args.prefix,
     )
 
     results = asyncio.run(
         log_fetcher.s3_fetch_logs(
-            store_location='./logs',
+            store_location=args.store_location,
             start_time=start_time,
             end_time=end_time
         )
