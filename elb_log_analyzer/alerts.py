@@ -1,5 +1,6 @@
 from requests.sessions import Session
 from os.path import isfile
+from json import loads as json_loads
 
 
 import logging
@@ -15,6 +16,27 @@ class SlackAlert:
         self._session = Session()
         self._webhook_url = webhook_url
 
+    def __get_request_with_ipabuse_data(self, data:dict):
+        '''
+        to be used inside _generate_alert_message 
+        for extracting details of clients with ip
+        abusive data.
+        '''
+        # get clients with high requests count
+        high_req_clients_data = []
+        for client_ip in data.keys():
+            if client_ip == 'total':
+                continue
+            
+            # get abusive ip data
+            if data[client_ip].get('ip_abuse_data', None):
+                ip_abuse_data = data[client_ip]['ip_abuse_data']
+                ip_abuse_data['total'] = data[client_ip]['total']
+                high_req_clients_data.append(ip_abuse_data)
+
+        return high_req_clients_data
+
+
     def _generate_alert_message(self, analyzed_log_file_location:str):
         '''
         generates alert message from analyzed log file.
@@ -29,11 +51,23 @@ class SlackAlert:
             logger.error(msg)
             return ':open_file_folder: ' + msg
     
-        # get clients with high requests count 
-        clients_data = []
-        # for 
-        
+        # read data from file
+        data = None
+        with open(analyzed_log_file_location, 'r') as f:
+            data = json_loads(f.read())
 
+        abusive_client_details = self.__get_request_with_ipabuse_data(data)
+        
+        # create message from data
+        msg = ':alert: _Abusive Client Details_ \n\n'
+
+        for client in abusive_client_details:
+            for k,v in client.items():
+                msg += f'{k}:\t{v}\n'
+            msg += '='*8
+            msg += '\n\n'
+
+        return msg
 
     def _send_message(self, message: str):
         assert isinstance(message, str)
@@ -46,7 +80,7 @@ class SlackAlert:
         res = self._session.post(url=self._webhook_url, json=payload)
         return res
     
-    def generate_alert(self, analyzed_log_file_location:str) -> dict:
+    def generate_alert(self, analyzed_log_file_location:str):
         assert isinstance(analyzed_log_file_location, str)
 
         msg = self._generate_alert_message(analyzed_log_file_location)
@@ -56,4 +90,3 @@ class SlackAlert:
             'status_code': res.status_code,
             'text': res.text
         }
-
