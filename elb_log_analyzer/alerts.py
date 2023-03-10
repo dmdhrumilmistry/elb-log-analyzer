@@ -1,3 +1,4 @@
+from argparse import ArgumentParser
 from requests.sessions import Session
 from os.path import isfile
 from json import loads as json_loads
@@ -91,3 +92,16 @@ class SlackAlert:
             'status_code': res.status_code,
             'text': res.text
         }
+
+
+if __name__ == '__main__':
+    parser = ArgumentParser(prog='alerts')
+
+    parser.add_argument('-w', '--web-hook', dest='web_hook', type=str, help='Slack Webhook URL', required=True)
+    parser.add_argument('-f', '--file', type=str, dest='analyzed_log_file_location', help='Analyzed Logs JSON file location', required=True)
+
+    args = parser.parse_args()    
+
+    slack = SlackAlert(args.web_hook)
+    res = slack.generate_alert(args.analyzed_log_file_location)
+    print(res)

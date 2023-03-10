@@ -112,6 +112,18 @@ Analyzes downloaded log files.
     python3 -m elb_log_analyzer -i [LOG_FILE_PATH] -t [REQUESTS_THRESHOLD_VALUE] -k [IP_ABUSE_DB_API_KEY] -o [OUTPUT_FILE_PATH]
     ```
 
+## Alerts
+
+Send alert to slack channel with abusive ip details.
+
+### Usage
+
+- Send alert from analyzed file
+
+    ```bash
+    python elb_log_analyzer.alerts -w [SLACK_WEBHOOK] -f [ANALYZED_LOG_FILE_LOCATION]
+    ```
+
 ## Dashboard
 
 Dashboard to visualize data.
@@ -140,4 +152,30 @@ Dashboard to visualize data.
 
     ```bash
     python3 -m poetry publish --build --username [PYPI_USERNAME] --password [PYPI_PASSWORD]
+    ```
+
+## Usage Summary
+
+- Download log files
+
+    ```bash
+    python3 -m elb_log_analyzer.s3_log -b elb-log-bucket -p 'alb-log-bucket-name/AWSLogs/XXXXXXXXXXXX/elasticloadbalancing/aws-region/' -H [HOURS] -o logs
+    ```
+
+- Analyze Log Files
+
+    ```bash
+    python3 -m elb_log_analyzer -i logs -o log.json -t [REQUEST_THRESHOLD] -k [IP_ABUSE_API_KEY] 
+    ```
+
+- Send Alert to slack with client ips having total number of requests greater than threshold requests
+
+    ```bash
+    python elb_log_analyzer.alerts -w [SLACK_WEBHOOK] -f [ANALYZED_LOG_FILE_LOCATION]
+    ```
+
+- Visualize Analyzed Logs using Dashboard
+
+    ```bash
+    streamlit run dashboard/app.py
     ```
