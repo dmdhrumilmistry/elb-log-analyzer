@@ -30,9 +30,6 @@ class S3LogFetcher:
         '''
         downloads log files from s3 bucket in gzip format, then stores file after extraction.
         '''
-        # download file
-        local_file_path_dir = dirname(local_file_path)
-        makedirs(local_file_path_dir, exist_ok=True)
         self.s3_client.download_file(
             self._bucket_name, s3_file_key, local_file_path)
 
@@ -73,7 +70,8 @@ class S3LogFetcher:
             modified_time: datetime = obj['LastModified']
 
             if start_time <= modified_time <= end_time:
-                local_file_path = path_join(store_location, key)
+                file_name = key.split('/')[-1]
+                local_file_path = path_join(store_location, file_name)
 
                 # download only *.log.gz files
                 if not local_file_path.endswith('.log.gz'):
