@@ -1,6 +1,8 @@
 from pprint import pprint
 from argparse import ArgumentParser
 from json import dumps
+from os import makedirs
+from os.path import dirname
 
 from .log_analyzer import LogAnalyzer
 
@@ -24,6 +26,11 @@ analyzed_data = log_analyzer.analyze_logs()
 # write/print data
 out_file_path = args.output_file_path
 if out_file_path:
+    # create output dir if not present
+    dir = dirname(out_file_path)
+    if dir:
+        makedirs(dir, exist_ok=True)
+
     with open(out_file_path, 'w') as f:
         f.write(dumps(analyzed_data))
         print(f'Analyzed Data stored in file: {out_file_path}')
