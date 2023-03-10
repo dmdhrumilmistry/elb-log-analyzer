@@ -31,7 +31,7 @@ class SlackAlert:
             # get abusive ip data
             if data[client_ip].get('ip_abuse_data', None):
                 ip_abuse_data = data[client_ip]['ip_abuse_data']
-                ip_abuse_data['total'] = data[client_ip]['total']
+                ip_abuse_data['total_requests'] = data[client_ip]['total']
                 high_req_clients_data.append(ip_abuse_data)
 
         return high_req_clients_data
