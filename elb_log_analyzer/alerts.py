@@ -60,7 +60,7 @@ class SlackAlert:
         
         # create message from data
         msg = ':alert: _Abusive Client Details_ \n\n'
-        msg = f'Analyzed Log File Location: {analyzed_log_file_location}\n\n'
+        msg += f'Analyzed Log File Location: {analyzed_log_file_location}\n\n'
 
         for client in abusive_client_details:
             for k,v in client.items():
