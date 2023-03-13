@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "elb-log-analyzer"
-version = "0.4.1"
+version = "0.4.2"
 description = "AWB ELB log analyzer"
 authors = ["Dhrumil Mistry <56185972+dmdhrumilmistry@users.noreply.github.com>"]
 license = "MIT"
