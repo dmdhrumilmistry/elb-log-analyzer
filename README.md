@@ -179,3 +179,17 @@ Dashboard to visualize data.
     ```bash
     streamlit run dashboard/app.py
     ```
+
+## Docker
+
+- Pull image
+
+    ```bash
+    docker pull dmdhrumilmistry/elb-log-analyzer
+    ```
+
+- Start Container
+
+    ```bash
+    docker run -it --rm dmdhrumilmistry/elb-log-analyzer "elb_log_analyzer -h"
+    ```
