@@ -14,7 +14,6 @@ RUN pip install elb-log-analyzer
 RUN mkdir -p /elb-log-analyzer/logs/latest
 RUN mkdir -p /elb-log-analyzer/analyzed_logs
 
-
 # copy workflow bashscript to /elb-log-analyzer
 COPY ./docker-workflow.sh /elb-log-analyzer/workflow.sh
 
