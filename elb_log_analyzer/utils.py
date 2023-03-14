@@ -32,6 +32,9 @@ def get_abusive_ip_data(ip: str, api_key: str):
         data = res.json().get("data", None)
     except JSONDecodeError:
         data = {'msg': f'Error while fetching ip details of {ip}'}
+    except Exception as e:
+        data = {'error': str(e)}
+
     return data
 
 def read_file_lines(file_path:str):
@@ -60,7 +63,6 @@ def get_logs(path:str):
     log_lines = []
     # if path is a directory then combine log lines from .log files inside the directory 
     if isdir(path):
-        # TODO: add logic to extract log lines from log files stored in directory
         log_files_path = list(filter(lambda file_path: file_path.endswith('.log'), listdir(path)))
         files_path = [ path_join(path, log_file_path) for log_file_path in log_files_path]
         for file_path in files_path:
