@@ -10,7 +10,7 @@ var_names=("BUCKET_NAME" "BUCKET_PREFIX")
 for var_name in "${var_names[@]}"; do
   if [[ -v $var_name ]]; then
     # echo "$var_name found"
-    echo ""
+    echo -e ""
   else
     echo "$var_name does not exist"
     exit -1
@@ -32,7 +32,7 @@ fi
 
 # send alert
 if [[ -v "SLACK_WEBHOOK" && -n ${SLACK_WEBHOOK} ]]; then
-    "[*] Sending IP details to slack"
+    echo -e "[*] Sending IP details to slack\n"
     /usr/local/bin/python -m elb_log_analyzer.alerts -w ${SLACK_WEBHOOK} -f log.json
 else
     echo -e "[!] SLACK_WEBHOOK var not found. Skipping Alert.\n"
