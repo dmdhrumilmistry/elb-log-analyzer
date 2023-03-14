@@ -65,7 +65,7 @@ class S3LogFetcher:
 
         # get files in provided time window
         tasks = []
-        for obj in response['Contents']:
+        for obj in response.get('Contents', []):
             key = obj['Key']
             modified_time: datetime = obj['LastModified']
 

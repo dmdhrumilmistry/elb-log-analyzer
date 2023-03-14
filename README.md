@@ -171,11 +171,25 @@ Dashboard to visualize data.
 - Send Alert to slack with client ips having total number of requests greater than threshold requests
 
     ```bash
-    python elb_log_analyzer.alerts -w [SLACK_WEBHOOK] -f [ANALYZED_LOG_FILE_LOCATION]
+    python -m elb_log_analyzer.alerts -w [SLACK_WEBHOOK] -f [ANALYZED_LOG_FILE_LOCATION]
     ```
 
 - Visualize Analyzed Logs using Dashboard
 
     ```bash
     streamlit run dashboard/app.py
+    ```
+
+## Docker
+
+- Pull image
+
+    ```bash
+    docker pull dmdhrumilmistry/elb-log-analyzer
+    ```
+
+- Start Container
+
+    ```bash
+    docker run -it --rm dmdhrumilmistry/elb-log-analyzer "elb_log_analyzer -h"
     ```
