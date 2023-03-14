@@ -180,7 +180,7 @@ Dashboard to visualize data.
     streamlit run dashboard/app.py
     ```
 
-## Docker
+## Docker WorkFlow
 
 - Pull image
 
@@ -188,8 +188,25 @@ Dashboard to visualize data.
     docker pull dmdhrumilmistry/elb-log-analyzer
     ```
 
+- Create an `.env` file
+
+    ```bash
+    # bucket configuration
+    BUCKET_NAME='elb-logs-bucket-name'
+    BUCKET_PREFIX='AWSLogs/XXXXXXXX/elasticloadbalancing/eu-west-2/'
+
+    # SECRETS conf
+    REQUESTS_THRESHOLD=400
+    IP_ABUSE_DB_API_KEY='UPDATE_HERE'
+    SLACK_WEBHOOK='UPDATE_HERE'
+
+    # consts
+    DATE_SUFFIX="$(date '+%Y/%m/%d')"
+    LOG_ANALYSIS_INTERVAL=5
+    ```
+
 - Start Container
 
     ```bash
-    docker run -it --rm dmdhrumilmistry/elb-log-analyzer "elb_log_analyzer -h"
+    docker run -it --rm dmdhrumilmistry/elb-log-analyzer --env-file .env
     ```

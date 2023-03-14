@@ -7,7 +7,6 @@ var_names=("BUCKET_NAME" "BUCKET_PREFIX")
 for var_name in "${var_names[@]}"; do
   if [[ -v $var_name ]]; then
     echo "$var_name exists"
-    # perform actions here
   else
     echo "$var_name does not exist"
     exit -1
