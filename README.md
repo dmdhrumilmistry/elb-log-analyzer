@@ -208,5 +208,5 @@ Dashboard to visualize data.
 - Start Container
 
     ```bash
-    docker run -it --rm dmdhrumilmistry/elb-log-analyzer --env-file .env
+    docker run --env-file .env --rm dmdhrumilmistry/elb-log-analyzer
     ```
