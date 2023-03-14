@@ -33,3 +33,9 @@ if [[ -v "SLACK_WEBHOOK" && -n ${SLACK_WEBHOOK} ]]; then
 else
     echo -e "[!] SLACK_WEBHOOK var not found. Skipping Alert.\n"
 fi
+
+# move analyzed log files
+mv /elb-log-analyzer/logs/latest/* /elb-log-analyzr/logs/
+
+# mv analyzed file 
+mv /elb-log-analyzer/analyzed_logs/log.json /elb-log-analyzer/analyzed_logs/log-$(date +%Y-%m-%d-%H_%M_%S).json
