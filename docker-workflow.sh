@@ -1,12 +1,15 @@
 #!/bin/bash
 
+# exit on error
+set -e
+
 # declare an array of variable names
 var_names=("BUCKET_NAME" "BUCKET_PREFIX")
 
 # loop over the array and check each variable
 for var_name in "${var_names[@]}"; do
   if [[ -v $var_name ]]; then
-    echo "$var_name exists"
+    # echo "$var_name found"
   else
     echo "$var_name does not exist"
     exit -1
