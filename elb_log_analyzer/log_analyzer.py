@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.INFO,
 class LogAnalyzer:
     def __init__(self, log_file_path: str, ipabuse_api_key: str=None, request_threshold: int = 150) -> None:
         assert isinstance(log_file_path, str)
-        assert isinstance(request_threshold, int)
+        assert isinstance(request_threshold, int | None)
 
         self._ip_api_key = ipabuse_api_key
         self._request_threshold = request_threshold
@@ -197,7 +197,7 @@ class LogAnalyzer:
             if client_ip == 'total':
                 continue
 
-            if data[client_ip]['total'] > self._request_threshold:
+            if self._request_threshold and data[client_ip]['total'] > self._request_threshold:
                 ipabuse_data = None
                 
                 # get ip abuse db data if key exists
