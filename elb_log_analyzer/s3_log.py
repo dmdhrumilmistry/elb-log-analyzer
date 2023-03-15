@@ -61,6 +61,7 @@ class S3LogFetcher:
         response = self.s3_client.list_objects_v2(
             Bucket=self._bucket_name,
             Prefix=self._prefix,
+            # TODO: list max logs 1000
         )
 
         # get files in provided time window

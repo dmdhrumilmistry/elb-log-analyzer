@@ -1,17 +1,17 @@
-from pprint import pprint
 from argparse import ArgumentParser
+from elb_log_analyzer.log_analyzer import LogAnalyzer
 from json import dumps
 from os import makedirs
 from os.path import dirname
+from pprint import pprint
 
-from .log_analyzer import LogAnalyzer
 
 
 parser = ArgumentParser(prog='elb-log-analyzer')
 parser.add_argument('-i', '--input-log-file', dest='log_file_path',
                     help='Log file path or path of directory storing only log files', type=str, required=True)
 parser.add_argument('-k', '--api-key', dest='api_key',
-                    help='Abuse IP DB API key', type=str, default=None)
+                    help='Abuse IP DB/ipapi.co API key', type=str, default=None)
 parser.add_argument('-t', '--threshold',
                     dest='request_threshold', default=40, type=int)
 parser.add_argument('-o', '--output', help='output file path for storing data in json format',
