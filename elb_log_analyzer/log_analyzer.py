@@ -1,5 +1,5 @@
 from re import findall
-
+from ipapi import location
 from .utils import get_abusive_ip_data, get_logs
 
 
@@ -8,7 +8,7 @@ class LogAnalyzer:
         assert isinstance(log_file_path, str)
         assert isinstance(request_threshold, int)
 
-        self._ipabuse_api_key = ipabuse_api_key
+        self._ip_api_key = ipabuse_api_key
         self._request_threshold = request_threshold
         self._log_lines = get_logs(log_file_path)
 
@@ -117,7 +117,7 @@ class LogAnalyzer:
         # convert it to list
         return request_counts
 
-    def analyze_logs(self):
+    def analyze_logs(self, ip_data_api:str='IP_ABUSE_DB'):
         '''
         description: analyze logs line by line and returns data in below format.
 
@@ -127,7 +127,7 @@ class LogAnalyzer:
                 'total': count(int),
                 'ports':[] (list(int)),
                 'user_agents': [] (list(str)),
-                'ip_abuse_data': None,
+                'ip_data': None,
                 'requests':{
                     'HTTP_METHOD': {'url' : {'count' :int, 'elb_status_codes':[], 'backend_status_codes':[]} , 'total':count(int)},
                 }
@@ -188,13 +188,23 @@ class LogAnalyzer:
                                      ][log['request']['url']]['timestamps'].append(log['timestamp'])
         
         # get abuse details if threshold increases
-        if self._ipabuse_api_key:
-            for client_ip in data.keys():
-                if client_ip == 'total':
-                    continue
+        for client_ip in data.keys():
+            if client_ip == 'total':
+                continue
 
-                if data[client_ip]['total'] > self._request_threshold:
-                    ipabuse_data = get_abusive_ip_data(client_ip, self._ipabuse_api_key)
-                    data[client_ip]['ip_abuse_data'] = ipabuse_data
+            if data[client_ip]['total'] > self._request_threshold:
+                ipabuse_data = None
+                
+                # get ip abuse db data if key exists
+                if ip_data_api == 'IP_ABUSE_DB' and self._ip_api_key:
+                    ipabuse_data = get_abusive_ip_data(client_ip, self._ip_api_key)
+
+                # get ip api data 
+                # if key == None -> Free tier
+                # if key == str -> paid tier
+                else:
+                    ipabuse_data = location(ip=client_ip, key=self._ip_api_key, output='json')
+
+                data[client_ip]['ip_data'] = ipabuse_data
 
         return data
