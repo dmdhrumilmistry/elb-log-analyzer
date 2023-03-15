@@ -19,9 +19,10 @@ class S3LogFetcher:
     class to download elb logs from S3 bucket
     '''
 
-    def __init__(self, bucket_name: str, prefix: str) -> None:
+    def __init__(self, bucket_name: str, prefix: str, max_keys:int=1000) -> None:
         self._bucket_name = bucket_name
         self._prefix = prefix
+        self._max_keys = max_keys
 
         # create boto3 s3 client
         self.s3_client = boto3.client('s3')
@@ -61,7 +62,7 @@ class S3LogFetcher:
         response = self.s3_client.list_objects_v2(
             Bucket=self._bucket_name,
             Prefix=self._prefix,
-            # TODO: list max logs 1000
+            MaxKeys=self._max_keys
         )
 
         # get files in provided time window

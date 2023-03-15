@@ -13,7 +13,7 @@ parser.add_argument('-i', '--input-log-file', dest='log_file_path',
 parser.add_argument('-k', '--api-key', dest='api_key',
                     help='Abuse IP DB/ipapi.co API key', type=str, default=None)
 parser.add_argument('-t', '--threshold',
-                    dest='request_threshold', default=40, type=int)
+                    dest='request_threshold', default=None, type=int)
 parser.add_argument('-o', '--output', help='output file path for storing data in json format',
                     dest='output_file_path', type=str, default=None)
 args = parser.parse_args()
