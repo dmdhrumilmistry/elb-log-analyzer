@@ -1,7 +1,12 @@
 from re import findall
 from ipapi import location
-from .utils import get_abusive_ip_data, get_logs
+from elb_log_analyzer.utils import get_abusive_ip_data, get_logs
 
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO,
+                    format='[%(asctime)s] [%(levelname)s] - %(message)s')
 
 class LogAnalyzer:
     def __init__(self, log_file_path: str, ipabuse_api_key: str=None, request_threshold: int = 150) -> None:
@@ -198,12 +203,14 @@ class LogAnalyzer:
                 # get ip abuse db data if key exists
                 if ip_data_api == 'IP_ABUSE_DB' and self._ip_api_key:
                     ipabuse_data = get_abusive_ip_data(client_ip, self._ip_api_key)
+                    logger.info(f'IP details fetched from ip abuse db api for IP: {client_ip}')
 
                 # get ip api data 
                 # if key == None -> Free tier
                 # if key == str -> paid tier
                 else:
                     ipabuse_data = location(ip=client_ip, key=self._ip_api_key, output='json')
+                    logger.info(f'IP details fetched from ipapi.co api for IP: {client_ip}')
 
                 data[client_ip]['ip_data'] = ipabuse_data
 

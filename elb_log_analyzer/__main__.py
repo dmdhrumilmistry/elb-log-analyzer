@@ -1,10 +1,10 @@
-from pprint import pprint
 from argparse import ArgumentParser
+from elb_log_analyzer.log_analyzer import LogAnalyzer
 from json import dumps
 from os import makedirs
 from os.path import dirname
+from pprint import pprint
 
-from .log_analyzer import LogAnalyzer
 
 
 parser = ArgumentParser(prog='elb-log-analyzer')
