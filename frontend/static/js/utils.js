@@ -1,4 +1,3 @@
-// import { Tabulator } from 'tabulator-tables';
 const ipRequestCountTable = 'ip-requests-count-table';
 
 let fileLoaded = false; // Flag to check if the file has already been loaded
@@ -16,7 +15,7 @@ function addEventListener() {
             reader.onload = function (e) {
                 let jsonContent = e.target.result;
                 jsonData = JSON.parse(jsonContent);
-                // Call a function or perform any actions with the loaded JSON data
+                // Call a function or perform actions with the loaded JSON data
                 createDashboard(jsonData);
             };
             reader.readAsText(file);
@@ -55,9 +54,32 @@ function createIPRequestCountTable(jsonData) {
 
 }
 
+function createIPDataTable(){
+    if (jsonData !== null){
+        
+    } else{
+        console.error('Invalid File: Failed to load jsonData');
+    }
+}
+
+function updateIPList(jsonData) {
+    let dropDownListElements = '';
+
+    for (let clientIP in jsonData) {
+        // TODO: sanitize data to avoid introducing xss attack vectors 
+        if (clientIP !== 'total') {
+            dropDownListElements += `<li><button class="dropdown-item" type="button" onclick="createIPDataTable()">${clientIP}</button></li>`
+        }
+    }
+
+    const dropDown = document.getElementById('client-ip-based-data-dropdown');
+    dropDown.innerHTML = dropDownListElements;
+}
+
+
 function createDashboard(jsonData) {
-    // Display the JSON data on the page
     createIPRequestCountTable(jsonData);
+    updateIPList(jsonData);
 }
 
 addEventListener();

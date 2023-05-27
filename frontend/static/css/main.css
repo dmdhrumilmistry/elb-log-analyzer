@@ -1,4 +1,8 @@
 #ip-requests-count-table .tabulator-tableHolder {
     overflow-y: scroll;
-  }
-  
+}
+
+.scrollable-dropdown {
+    max-height: 200px;
+    overflow-y: auto;
+}
